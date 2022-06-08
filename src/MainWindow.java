@@ -10,11 +10,10 @@ import java.io.*;
 
 public class MainWindow extends JFrame{
 
-    private JPanel container;
+    private final JPanel container;
 
-    private JPanel welcomePanel;
+    private final JPanel welcomePanel;
     private JPanel tablePanel;
-
 
     private JPanel playerCardPanel;
     private FlowLayout handLayout;
@@ -25,9 +24,11 @@ public class MainWindow extends JFrame{
 
     private JLabel fundLabel;
 
-    private Container glassPane;
+    private final Container glassPane;
 
     private JTextArea placeBetButton;
+    private JPanel visualBetTop;
+    private JPanel visualBetBot;
 
 
     public MainWindow(String title) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
@@ -203,40 +204,56 @@ public class MainWindow extends JFrame{
             playerCardPanel.setLayout(handLayout);
             playerCardPanel.setOpaque(true);
 
-
             //Player's Bet
             betPanel = new JPanel();
             BoxLayout boxLayout = new BoxLayout(betPanel, BoxLayout.PAGE_AXIS);
             betPanel.setLayout(boxLayout);
-            betPanel.setPreferredSize(new Dimension(84,130));
+            betPanel.setPreferredSize(new Dimension(90,130));
             betPanel.setOpaque(false);
             betPanel.add(Box.createHorizontalGlue());
 
                 betBox = new JPanel();
-                FlowLayout betBoxLayout = new FlowLayout();
+                CardLayout betBoxLayout = new CardLayout();
                 betBox.setLayout(betBoxLayout);
-                betBoxLayout.setHgap(-30);
                 betBox.setOpaque(false);
                 Border yellowBorder = BorderFactory.createLineBorder(new Color(244,179,36));
                 betBox.setBorder(yellowBorder);
                 betPanel.add(betBox);
-                    placeBetButton = new JTextArea("CLICK TO PLACE BET");
-                    placeBetButton.setFont(new Font("Arial", Font.BOLD,13));
-                    placeBetButton.setForeground(Color.gray);
-                    placeBetButton.setSize(new Dimension(80,130));
-                    placeBetButton.setWrapStyleWord(true);
-                    placeBetButton.setLineWrap(true);
-                    placeBetButton.setEditable(false);
-                    placeBetButton.setOpaque(false);
-                    placeBetButton.setFocusable(false);
 
-                    betBox.add(placeBetButton);
+                    JPanel placeBetButtonPanel = new JPanel();
+                    placeBetButtonPanel.setOpaque(false);
+
+                        placeBetButton = new JTextArea("CLICK TO PLACE BET");
+                        placeBetButton.setFont(new Font("Arial", Font.BOLD,13));
+                        placeBetButton.setForeground(Color.gray);
+                        placeBetButton.setSize(new Dimension(80,130));
+                        placeBetButton.setWrapStyleWord(true);
+                        placeBetButton.setLineWrap(true);
+                        placeBetButton.setEditable(false);
+                        placeBetButton.setOpaque(false);
+                        placeBetButton.setFocusable(false);
+
+                        placeBetButtonPanel.add(placeBetButton);
+
+                    JPanel visualBetPanel = new JPanel(new GridLayout(2,1));
+                    visualBetPanel.setOpaque(false);
+                        FlowLayout visualBetLayout = new FlowLayout();
+                        visualBetLayout.setHgap(-30);
+                        visualBetTop = new JPanel(visualBetLayout);
+                        visualBetTop.setOpaque(false);
+                        visualBetBot = new JPanel(visualBetLayout);
+                        visualBetBot.setOpaque(false);
+
+                        visualBetPanel.add(visualBetTop);
+                        visualBetPanel.add(visualBetBot);
+
+                    betBox.add(placeBetButtonPanel, "card1");
+                    betBox.add(visualBetPanel, "card2");
 
                 betAmount = new JLabel(Integer.toString(Data.bet));
                 betAmount.setFont(new Font("Arial", Font.PLAIN,15));
                 betAmount.setAlignmentX(Component.CENTER_ALIGNMENT);
                 betAmount.setForeground(new Color(244,179,36));
-                //betPanel.add(Box.createRigidArea(new Dimension(30,0)));
                 betPanel.add(betAmount);
 
             //filler panel
@@ -328,7 +345,8 @@ public class MainWindow extends JFrame{
             public void mouseClicked(MouseEvent e)
             {
                 glassPane.setVisible(true);
-                placeBetButton.setVisible(false);
+                betBox.remove(placeBetButtonPanel);
+                betBox.add(visualBetPanel);
 
             }
         });
@@ -344,23 +362,6 @@ public class MainWindow extends JFrame{
 
     }
 
-    private void decisionHit(){
-        Card p = Data.currentDeck.draw();
-        Data.addPlayerCard(p);
-        handLayout.setHgap(-65);
-        playerCardPanel.removeAll();
-        for(int i = Data.playerHandCounter; i >= 0; i--){
-            if(!(Data.playerHand[i] == null)){
-                JLabel cardG = new JLabel(new ImageIcon(Data.playerHand[i].getImg().getScaledInstance(84,117, Image.SCALE_SMOOTH)));
-                playerCardPanel.add(cardG);
-            }
-        }
-
-        validate();
-        repaint();
-
-    }
-
     private void betUIComponents(){
         glassPane.setLayout(new FlowLayout(FlowLayout.LEFT));
 
@@ -369,35 +370,18 @@ public class MainWindow extends JFrame{
         glassContentPanel.setLayout(glassBetLayout);
         glassContentPanel.setOpaque(false);
 
-
             Icon chipButtonIcon1 = (new ImageIcon("ChipButtons/1.png"));
-
-            JButton chipButton1 = new JButton(chipButtonIcon1);
-            chipButton1.setFocusPainted(false);
-            chipButton1.setBorderPainted(false);
-            chipButton1.setContentAreaFilled(false);
-            chipButton1.setAlignmentX(Component.CENTER_ALIGNMENT);
+            ChipButton chipButton1 = new ChipButton(chipButtonIcon1);
 
             Icon chipButtonIcon5 = new ImageIcon("ChipButtons/5.png");
-            JButton chipButton5 = new JButton(chipButtonIcon5);
-            chipButton5.setFocusPainted(false);
-            chipButton5.setBorderPainted(false);
-            chipButton5.setContentAreaFilled(false);
-            chipButton5.setAlignmentX(Component.CENTER_ALIGNMENT);
+            ChipButton chipButton5 = new ChipButton(chipButtonIcon5);
 
             Icon chipButtonIcon50 = new ImageIcon("ChipButtons/50.png");
-            JButton chipButton50 = new JButton(chipButtonIcon50);
-            chipButton50.setFocusPainted(false);
-            chipButton50.setBorderPainted(false);
-            chipButton50.setContentAreaFilled(false);
-            chipButton50.setAlignmentX(Component.CENTER_ALIGNMENT);
+            ChipButton chipButton50 = new ChipButton(chipButtonIcon50);
 
             Icon chipButtonIcon500 = new ImageIcon("ChipButtons/500.png");
-            JButton chipButton500 = new JButton(chipButtonIcon500);
-            chipButton500.setFocusPainted(false);
-            chipButton500.setBorderPainted(false);
-            chipButton500.setContentAreaFilled(false);
-            chipButton500.setAlignmentX(Component.CENTER_ALIGNMENT);
+            ChipButton chipButton500 = new ChipButton(chipButtonIcon500);
+
 
             JPanel betButtons = new JPanel();
             betButtons.setOpaque(false);
@@ -421,20 +405,22 @@ public class MainWindow extends JFrame{
             chipButton1.addActionListener(e -> {
                 Data.bet += 1;
                 betAmount.setText(Integer.toString(Data.bet));
-                JLabel chip1 = new JLabel(new ImageIcon("Chips/1.png"));
-                betBox.add(chip1);
+                addBet(500);
             });
             chipButton5.addActionListener(e -> {
                 Data.bet += 5;
                 betAmount.setText(Integer.toString(Data.bet));
+                addBet(500);
             });
             chipButton50.addActionListener(e -> {
                 Data.bet += 50;
                 betAmount.setText(Integer.toString(Data.bet));
+                addBet(500);
             });
             chipButton500.addActionListener(e -> {
                 Data.bet += 500;
                 betAmount.setText(Integer.toString(Data.bet));
+                addBet(500);
             });
 
 
@@ -451,15 +437,97 @@ public class MainWindow extends JFrame{
         glassPane.add(glassContentPanel);
     }
 
+
+    //MUSIC
     public static void music () throws LineUnavailableException, UnsupportedAudioFileException, IOException {
 
         File url = new File("Music/thejazzpiano.wav");
         Clip clip = AudioSystem.getClip();
-        // getAudioInputStream() also accepts a File or InputStream
         AudioInputStream ais = AudioSystem.getAudioInputStream(url);
         clip.open(ais);
         clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
+
+    private void decisionHit(){
+        Card p = Data.currentDeck.draw();
+        Data.addPlayerCard(p);
+        handLayout.setHgap(-65);
+        playerCardPanel.removeAll();
+        for(int i = Data.playerHandCounter; i >= 0; i--){
+            if(!(Data.playerHand[i] == null)){
+                JLabel cardG = new JLabel(new ImageIcon(Data.playerHand[i].getImg().getScaledInstance(84,117, Image.SCALE_SMOOTH)));
+                playerCardPanel.add(cardG);
+            }
+        }
+
+        validate();
+        repaint();
+
+    }
+
+    private void addBet (int amount){
+        visualBetTop.removeAll();
+        visualBetTop.repaint();
+        visualBetBot.removeAll();
+        visualBetBot.repaint();
+
+        //optimize chip usage
+        int localBet = Data.bet;
+        int [] chipsArr = new int[8];
+        int chipsArrCounter = 0;
+
+        while(localBet > 0){
+            if(chipsArrCounter == 8){
+                break;
+            }
+            if(localBet >= 500){
+                //JLabel chip = new JLabel(new ImageIcon("Chips/500.png"));
+                chipsArr[chipsArrCounter] = 500;
+                chipsArrCounter++;
+                localBet -= 500;
+            }
+            else if(localBet >= 50){
+                chipsArr[chipsArrCounter] = 50;
+                chipsArrCounter++;
+                localBet -= 50;
+            }
+            else if(localBet >= 5){
+                chipsArr[chipsArrCounter] = 5;
+                chipsArrCounter++;
+                localBet -= 5;
+            }
+            else{
+                chipsArr[chipsArrCounter] = 1;
+                chipsArrCounter++;
+                localBet -= 1;
+            }
+        }
+
+        for(int i = 0; i < chipsArr.length/2; i++){
+            if(chipsArr[i] == 0){
+                break;
+            }
+            JLabel chip = new JLabel(new ImageIcon("Chips/"+ chipsArr[i]+".png"));
+            visualBetTop.add(chip);
+        }
+        for(int i = 4; i < chipsArr.length; i++){
+            if(chipsArr[i] == 0){
+                break;
+            }
+            else if(i == 7){
+                JLabel plus = new JLabel(new ImageIcon("Chips/+.png"));
+                visualBetBot.add(plus);
+            }
+            else {
+                JLabel chip = new JLabel(new ImageIcon("Chips/" + chipsArr[i] + ".png"));
+                visualBetBot.add(chip);
+            }
+        }
+
+    }
+
+
+
 
 
 }

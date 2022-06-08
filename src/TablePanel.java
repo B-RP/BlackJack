@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class TablePanel extends JPanel {
 
-    private Image logo = ImageIO.read(new File("TableText.png"));
+    private final Image logo = ImageIO.read(new File("TableText.png"));
 
     public TablePanel() throws IOException {
         setLayout(new BorderLayout());

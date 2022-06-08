@@ -5,8 +5,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class WelcomePanel extends JPanel {
-    private JLabel tableTextLabel = new JLabel();
-    private Image welcomeImg = ImageIO.read(new File("WelcomeText.png"));
+    private final JLabel tableTextLabel = new JLabel();
+    private final Image welcomeImg = ImageIO.read(new File("WelcomeText.png"));
 
     public WelcomePanel() throws IOException {
         setLayout(new BorderLayout());

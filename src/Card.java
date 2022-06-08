@@ -3,10 +3,10 @@ import java.awt.image.BufferedImage;
 
 public class Card {
     //TODO Change return style
-    private String color;
-    private String suit;
-    private String rank;
-    private BufferedImage img;
+    private final String color;
+    private final String suit;
+    private final String rank;
+    private final BufferedImage img;
 
 
     Card(String clr, String st, String rnk, BufferedImage img){
