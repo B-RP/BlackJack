@@ -347,7 +347,6 @@ public class MainWindow extends JFrame{
                 glassPane.setVisible(true);
                 betBox.remove(placeBetButtonPanel);
                 betBox.add(visualBetPanel);
-
             }
         });
 
@@ -358,8 +357,6 @@ public class MainWindow extends JFrame{
             validate();
             repaint();
         });
-
-
     }
 
     private void betUIComponents(){
@@ -370,17 +367,39 @@ public class MainWindow extends JFrame{
         glassContentPanel.setLayout(glassBetLayout);
         glassContentPanel.setOpaque(false);
 
-            Icon chipButtonIcon1 = (new ImageIcon("ChipButtons/1.png"));
-            ChipButton chipButton1 = new ChipButton(chipButtonIcon1);
+            JPanel chipButtonPanel = new JPanel();
+            BoxLayout chipButtonLayout = new BoxLayout(chipButtonPanel, BoxLayout.Y_AXIS);
+            chipButtonPanel.setLayout(chipButtonLayout);
+            chipButtonPanel.setOpaque(false);
 
-            Icon chipButtonIcon5 = new ImageIcon("ChipButtons/5.png");
-            ChipButton chipButton5 = new ChipButton(chipButtonIcon5);
+                Icon chipButtonIcon1 = (new ImageIcon("ChipButtons/1.png"));
+                ChipButton chipButton1 = new ChipButton(chipButtonIcon1);
+                chipButtonPanel.add(chipButton1);
 
-            Icon chipButtonIcon50 = new ImageIcon("ChipButtons/50.png");
-            ChipButton chipButton50 = new ChipButton(chipButtonIcon50);
+                Icon chipButtonIcon5 = new ImageIcon("ChipButtons/5.png");
+                ChipButton chipButton5 = new ChipButton(chipButtonIcon5);
+                chipButtonPanel.add(chipButton5);
 
-            Icon chipButtonIcon500 = new ImageIcon("ChipButtons/500.png");
-            ChipButton chipButton500 = new ChipButton(chipButtonIcon500);
+                Icon chipButtonIcon50 = new ImageIcon("ChipButtons/50.png");
+                ChipButton chipButton50 = new ChipButton(chipButtonIcon50);
+                chipButtonPanel.add(chipButton50);
+
+                Icon chipButtonIcon500 = new ImageIcon("ChipButtons/500.png");
+                ChipButton chipButton500 = new ChipButton(chipButtonIcon500);
+                chipButtonPanel.add(chipButton500);
+
+                JScrollPane scrollPane = new JScrollPane(chipButtonPanel);
+                scrollPane.createVerticalScrollBar();
+                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                scrollPane.setPreferredSize(new Dimension(200,450));
+                scrollPane.setOpaque(false);
+                scrollPane.getViewport().setOpaque(false);
+                scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+
+
+
+        glassContentPanel.add(scrollPane);
 
 
             JPanel betButtons = new JPanel();
@@ -422,12 +441,6 @@ public class MainWindow extends JFrame{
                 betAmount.setText(Integer.toString(Data.bet));
                 addBet(500);
             });
-
-
-            glassContentPanel.add(chipButton1);
-            glassContentPanel.add(chipButton5);
-            glassContentPanel.add(chipButton50);
-            glassContentPanel.add(chipButton500);
 
             glassContentPanel.add(betButtons);
                 glassContentPanel.add(cancelButton);
