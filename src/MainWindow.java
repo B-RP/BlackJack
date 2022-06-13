@@ -335,9 +335,7 @@ public class MainWindow extends JFrame{
         tablePanel.add(panel5);
         //EVENT LISTENERS
         //HIT
-        hitButton.addActionListener(e -> {
-            decisionHit();
-        });
+        hitButton.addActionListener(e -> decisionHit());
 
         //PLACE BET
         placeBetButton.addMouseListener(new MouseAdapter()
@@ -359,6 +357,7 @@ public class MainWindow extends JFrame{
         });
     }
 
+    //GLASS PANEL
     private void betUIComponents(){
         glassPane.setLayout(new FlowLayout(FlowLayout.LEFT));
 
@@ -390,17 +389,14 @@ public class MainWindow extends JFrame{
 
                 JScrollPane scrollPane = new JScrollPane(chipButtonPanel);
                 scrollPane.createVerticalScrollBar();
-                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-                scrollPane.setPreferredSize(new Dimension(200,450));
+                scrollPane.getVerticalScrollBar().setUI(new CustomScrollBar());
+                scrollPane.setPreferredSize(new Dimension(200,550));
                 scrollPane.setOpaque(false);
                 scrollPane.getViewport().setOpaque(false);
                 scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
 
-
-
         glassContentPanel.add(scrollPane);
-
 
             JPanel betButtons = new JPanel();
             betButtons.setOpaque(false);
@@ -424,22 +420,22 @@ public class MainWindow extends JFrame{
             chipButton1.addActionListener(e -> {
                 Data.bet += 1;
                 betAmount.setText(Integer.toString(Data.bet));
-                addBet(500);
+                addBet();
             });
             chipButton5.addActionListener(e -> {
                 Data.bet += 5;
                 betAmount.setText(Integer.toString(Data.bet));
-                addBet(500);
+                addBet();
             });
             chipButton50.addActionListener(e -> {
                 Data.bet += 50;
                 betAmount.setText(Integer.toString(Data.bet));
-                addBet(500);
+                addBet();
             });
             chipButton500.addActionListener(e -> {
                 Data.bet += 500;
                 betAmount.setText(Integer.toString(Data.bet));
-                addBet(500);
+                addBet();
             });
 
             glassContentPanel.add(betButtons);
@@ -478,7 +474,7 @@ public class MainWindow extends JFrame{
 
     }
 
-    private void addBet (int amount){
+    private void addBet (){
         visualBetTop.removeAll();
         visualBetTop.repaint();
         visualBetBot.removeAll();
@@ -494,7 +490,6 @@ public class MainWindow extends JFrame{
                 break;
             }
             if(localBet >= 500){
-                //JLabel chip = new JLabel(new ImageIcon("Chips/500.png"));
                 chipsArr[chipsArrCounter] = 500;
                 chipsArrCounter++;
                 localBet -= 500;
