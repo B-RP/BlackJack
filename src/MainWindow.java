@@ -30,6 +30,9 @@ public class MainWindow extends JFrame{
     private JPanel visualBetTop;
     private JPanel visualBetBot;
 
+    private JPanel placeBetButtonPanel;
+    private JPanel visualBetPanel;
+
 
     public MainWindow(String title) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
         super(title);
@@ -112,6 +115,10 @@ public class MainWindow extends JFrame{
             //Declare a new Deck
                 Data.currentDeck = new Deck();
                 Data.currentDeck.shuffle();
+
+                Data.balance = 2500;
+                fundLabel.setText(String.valueOf(Data.balance));
+
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -220,7 +227,7 @@ public class MainWindow extends JFrame{
                 betBox.setBorder(yellowBorder);
                 betPanel.add(betBox);
 
-                    JPanel placeBetButtonPanel = new JPanel();
+                    placeBetButtonPanel = new JPanel();
                     placeBetButtonPanel.setOpaque(false);
 
                         placeBetButton = new JTextArea("CLICK TO PLACE BET");
@@ -235,7 +242,7 @@ public class MainWindow extends JFrame{
 
                         placeBetButtonPanel.add(placeBetButton);
 
-                    JPanel visualBetPanel = new JPanel(new GridLayout(2,1));
+                    visualBetPanel = new JPanel(new GridLayout(2,1));
                     visualBetPanel.setOpaque(false);
                         FlowLayout visualBetLayout = new FlowLayout();
                         visualBetLayout.setHgap(-30);
@@ -283,7 +290,7 @@ public class MainWindow extends JFrame{
             fundPanelLayout.setVgap(40);
             fundLabelPanel.setPreferredSize(new Dimension((getWidth()/3 - 30), getHeight()));
             fundLabelPanel.setOpaque(false);
-                fundLabel = new JLabel("Funds: 2000");
+                fundLabel = new JLabel(String.valueOf(Data.balance));
                 fundLabel.setForeground(new Color(244,179,36));
                 fundLabel.setFont(new Font("Arial", Font.BOLD,30));
                 fundLabelPanel.add(fundLabel, BorderLayout.WEST);
@@ -390,7 +397,8 @@ public class MainWindow extends JFrame{
                 JScrollPane scrollPane = new JScrollPane(chipButtonPanel);
                 scrollPane.createVerticalScrollBar();
                 scrollPane.getVerticalScrollBar().setUI(new CustomScrollBar());
-                scrollPane.setPreferredSize(new Dimension(200,550));
+                scrollPane.getVerticalScrollBar().setOpaque(false);
+                scrollPane.setPreferredSize(new Dimension(200,430));
                 scrollPane.setOpaque(false);
                 scrollPane.getViewport().setOpaque(false);
                 scrollPane.setBorder(BorderFactory.createEmptyBorder());
@@ -410,11 +418,20 @@ public class MainWindow extends JFrame{
             //buttons
             cancelButton.addActionListener(e -> {
                 glassPane.setVisible(false);
-                placeBetButton.setVisible(true);
+
+                betBox.remove(visualBetPanel);
+                betBox.add(placeBetButtonPanel);
+                visualBetBot.removeAll();
+                visualBetBot.removeAll();
+                Data.bet = 0;
+                betAmount.setText(String.valueOf(Data.bet));
+
             });
             acceptButton.addActionListener(e -> {
                 glassPane.setVisible(false);
-                placeBetButton.setVisible(false);
+                Data.balance -= Data.bet;
+                fundLabel.setText(String.valueOf(Data.balance));
+
             });
             //chip buttons
             chipButton1.addActionListener(e -> {

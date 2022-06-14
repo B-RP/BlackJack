@@ -9,8 +9,8 @@ public class Data {
     public static Card [] dealerHand = new Card [11];
     public static int dealerHandCounter = 0;
 
-    public static int playerTotal = 0;
-    public static int dealerTotal = 0;
+    public static int playerHandTotal = 0;
+    public static int dealerHandTotal = 0;
 
     //Player fund and bet amount
     public static int balance;
@@ -26,14 +26,4 @@ public class Data {
         dealerHandCounter++;
     }
 
-    //TESTING FUNCTIONS
-
-    public static void showHands(){
-        System.out.println("Dealers hand: ");
-        for(int i = 0; i < playerHand.length; i++){
-            if(!(playerHand[i] == null)){
-                System.out.println(playerHand[i]);
-            }
-        }
-    }
 }
