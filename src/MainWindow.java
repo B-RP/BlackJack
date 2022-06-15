@@ -2,6 +2,7 @@ import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -126,29 +127,49 @@ public class MainWindow extends JFrame{
     }
 
     private void createUIComponents() throws IOException {
-        //Grid Layout
+        //Grid layout for container panel
         GridLayout grid = new GridLayout(5,1);
         grid.setHgap(10);
         grid.setVgap(10);
-
         tablePanel.setLayout(grid);
 
-        //------PANEL 1 DEALERS HAND----------------
+        /*----------------------------------------
+        ------PANEL 1 DEALERS HAND----------------
+        ------------------------------------------*/
         JPanel panel1 = new JPanel();
+        panel1.setPreferredSize(new Dimension(1440,170));
         FlowLayout flow1 = new FlowLayout(FlowLayout.CENTER);
         flow1.setHgap(5);
-        flow1.setVgap(20);
+        flow1.setVgap(5);
         panel1.setLayout(flow1);
         panel1.setOpaque(false);
         tablePanel.add(panel1);
 
-        BufferedImage cardPic = ImageIO.read(new File("Cards/k1.png"));
-        JLabel card = new JLabel(new ImageIcon(cardPic.getScaledInstance(84,117, Image.SCALE_SMOOTH)));
-        JLabel card2 = new JLabel(new ImageIcon(cardPic.getScaledInstance(84,117, Image.SCALE_SMOOTH)));
-        panel1.add(card);
-        panel1.add(card2);
+            //Dealer cards panel
+            JPanel dealerCardPanel = new JPanel();
+            dealerCardPanel.setPreferredSize(new Dimension(210, 150));
+            dealerCardPanel.setBackground(new Color(28, 25, 26));
+            Border dealerCardsBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(244,179,36)),
+                    "21", TitledBorder.CENTER,TitledBorder.BOTTOM, new Font("Arial", Font.PLAIN,15),
+                    new Color(244,179,36));
+            dealerCardPanel.setBorder(dealerCardsBorder);
 
-        //------PANEL 2 DECK AND DEALER DIALOGUE------------
+            FlowLayout dealerHandLayout = new FlowLayout(FlowLayout.CENTER);
+            dealerCardPanel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+            dealerHandLayout.setHgap(5);
+            dealerHandLayout.setVgap(5);
+            dealerCardPanel.setLayout(dealerHandLayout);
+            BufferedImage cardPic = ImageIO.read(new File("Cards/k1.png"));
+            JLabel card = new JLabel(new ImageIcon(cardPic.getScaledInstance(84,117, Image.SCALE_SMOOTH)));
+            JLabel card2 = new JLabel(new ImageIcon(cardPic.getScaledInstance(84,117, Image.SCALE_SMOOTH)));
+            dealerCardPanel.add(card);
+            dealerCardPanel.add(card2);
+
+        panel1.add(dealerCardPanel);
+
+        /*------------------------------------------------
+        ------PANEL 2 DECK AND DEALER DIALOGUE------------
+         ------------------------------------------------*/
         FlowLayout panel2Layout = new FlowLayout(FlowLayout.CENTER);
         JPanel panel2 = new JPanel(panel2Layout);
         panel2Layout.setHgap(300);
@@ -156,12 +177,12 @@ public class MainWindow extends JFrame{
 
             //Filler Panel
             JPanel fillerDealerPanel = new JPanel();
-            fillerDealerPanel.setPreferredSize(new Dimension(100,200 ));
+            fillerDealerPanel.setPreferredSize(new Dimension(100,130 ));
             fillerDealerPanel.setOpaque(false);
 
             //Dealer Dialogue
             JPanel dealerDioPanel = new JPanel();
-            dealerDioPanel.setPreferredSize(new Dimension(300,200));
+            dealerDioPanel.setPreferredSize(new Dimension(300,130));
             dealerDioPanel.setOpaque(false);
                 JLabel dealerDialogue = new JLabel("Please place your bet");
                 dealerDialogue.setForeground(new Color(244,179,36));
@@ -171,7 +192,7 @@ public class MainWindow extends JFrame{
 
             //Deck Panel
             JPanel deckPanel = new JPanel();
-            deckPanel.setPreferredSize(new Dimension(100,200));
+            deckPanel.setPreferredSize(new Dimension(100,130));
             deckPanel.setOpaque(false);
                 BufferedImage deckPic = ImageIO.read(new File("DeckVisual.png"));
                 JLabel deck = new JLabel(new ImageIcon(deckPic));
@@ -187,31 +208,37 @@ public class MainWindow extends JFrame{
 
         ////------Panel 3 - EMPTY---------------
         JPanel panel3 = new JPanel();
-        panel3.setPreferredSize(new Dimension(1440,150));
+        panel3.setPreferredSize(new Dimension(1440,100));
         panel3.setOpaque(false);
         tablePanel.add(panel3);
 
-        ////------Panel 4 - PLAYER HAND---------------
+        /*---------------------------------------------------
+         *------Panel 4 - PLAYER HAND AND BET---------------*
+         ---------------------------------------------------*/
         JPanel panel4 = new JPanel();
         FlowLayout flow4 = new FlowLayout(FlowLayout.CENTER);
+        panel4.setPreferredSize(new Dimension(1440,200));
         flow4.setHgap(10);
-        flow4.setVgap(10);
+        flow4.setVgap(0);
         panel4.setLayout(flow4);
         panel4.setOpaque(false);
 
-            //Player's cards
+            //Player's cards panel
             playerCardPanel = new JPanel();
-            playerCardPanel.setPreferredSize(new Dimension(210, 137));
+            playerCardPanel.setPreferredSize(new Dimension(210, 150));
             playerCardPanel.setBackground(new Color(28, 25, 26));
+            Border playerCardsBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(244,179,36)),
+                    "21", TitledBorder.CENTER,TitledBorder.BOTTOM, new Font("Arial", Font.PLAIN,15),
+                    new Color(244,179,36));
+            playerCardPanel.setBorder(playerCardsBorder);
 
             handLayout = new FlowLayout(FlowLayout.CENTER);
             playerCardPanel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
             handLayout.setHgap(5);
-            handLayout.setVgap(10);
+            handLayout.setVgap(5);
             playerCardPanel.setLayout(handLayout);
-            playerCardPanel.setOpaque(true);
 
-            //Player's Bet
+            //Player's Bet Panel
             betPanel = new JPanel();
             BoxLayout boxLayout = new BoxLayout(betPanel, BoxLayout.PAGE_AXIS);
             betPanel.setLayout(boxLayout);
