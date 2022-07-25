@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-//TODO Change return style
+
 public class Deck {
 
-    public Card[] deck;
-    public int position = 0;
+    private Card[] deck;
+    private int position = 0;
 
     //construct the deck
     Deck() throws IOException {
