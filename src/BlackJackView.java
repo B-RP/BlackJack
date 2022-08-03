@@ -28,7 +28,6 @@ public class BlackJackView extends JFrame{
 
     private final Container glassPane;
 
-    private JTextArea placeBetButton;
     private JPanel visualBetTop;
     private JPanel visualBetBot;
 
@@ -45,10 +44,20 @@ public class BlackJackView extends JFrame{
     private DecisionButton acceptButton;
     private DecisionButton cancelButton;
 
+    private DecisionButton betButton;
+
     private DecisionButton splitButton;
     private DecisionButton standButton;
     private DecisionButton hitButton;
 
+    private JLabel dealerDialogue;
+
+    private JPanel dealerCardPanel;
+
+    private TitledBorder dealerCardsBorder;
+    private TitledBorder playerCardsBorder;
+
+    private FlowLayout dealerHandLayout;
 
 
     public BlackJackView(String title) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
@@ -130,7 +139,6 @@ public class BlackJackView extends JFrame{
         ------PANEL 1 DEALERS HAND----------------
         ------------------------------------------*/
         JPanel panel1 = new JPanel();
-        panel1.setPreferredSize(new Dimension(1440,170));
         FlowLayout flow1 = new FlowLayout(FlowLayout.CENTER);
         flow1.setHgap(5);
         flow1.setVgap(5);
@@ -139,24 +147,20 @@ public class BlackJackView extends JFrame{
         tablePanel.add(panel1);
 
         //Dealer cards panel
-        JPanel dealerCardPanel = new JPanel();
+        dealerCardPanel = new JPanel();
         dealerCardPanel.setPreferredSize(new Dimension(210, 150));
         dealerCardPanel.setBackground(new Color(28, 25, 26));
-        Border dealerCardsBorder = BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(),
-                "21", TitledBorder.CENTER,TitledBorder.BOTTOM, new Font("Arial", Font.PLAIN,15),
+        dealerCardsBorder = BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(),
+                " ", TitledBorder.CENTER,TitledBorder.BOTTOM, new Font("Arial", Font.PLAIN,15),
                 new Color(244,179,36));
         dealerCardPanel.setBorder(dealerCardsBorder);
 
-        FlowLayout dealerHandLayout = new FlowLayout(FlowLayout.CENTER);
-        dealerCardPanel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        dealerHandLayout = new FlowLayout(FlowLayout.CENTER);
+        dealerCardPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         dealerHandLayout.setHgap(5);
         dealerHandLayout.setVgap(5);
         dealerCardPanel.setLayout(dealerHandLayout);
-        BufferedImage cardPic = ImageIO.read(new File("Cards/k1.png"));
-        JLabel card = new JLabel(new ImageIcon(cardPic.getScaledInstance(84,117, Image.SCALE_SMOOTH)));
-        JLabel card2 = new JLabel(new ImageIcon(cardPic.getScaledInstance(84,117, Image.SCALE_SMOOTH)));
-        dealerCardPanel.add(card);
-        dealerCardPanel.add(card2);
+
 
         panel1.add(dealerCardPanel);
 
@@ -177,7 +181,7 @@ public class BlackJackView extends JFrame{
         JPanel dealerDioPanel = new JPanel();
         dealerDioPanel.setPreferredSize(new Dimension(300,130));
         dealerDioPanel.setOpaque(false);
-        JLabel dealerDialogue = new JLabel("Please place your bet");
+        dealerDialogue = new JLabel();
         dealerDialogue.setForeground(new Color(244,179,36));
         dealerDialogue.setFont(new Font("Arial", Font.BOLD,20));
 
@@ -222,8 +226,8 @@ public class BlackJackView extends JFrame{
         playerCardPanel = new JPanel();
         playerCardPanel.setPreferredSize(new Dimension(210, 150));
         playerCardPanel.setBackground(new Color(28, 25, 26));
-        Border playerCardsBorder = BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(),
-                "21", TitledBorder.CENTER,TitledBorder.BOTTOM, new Font("Arial", Font.PLAIN,15),
+        playerCardsBorder = BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(),
+                " ", TitledBorder.CENTER,TitledBorder.BOTTOM, new Font("Arial", Font.PLAIN,15),
                 new Color(244,179,36));
         playerCardPanel.setBorder(playerCardsBorder);
 
@@ -249,21 +253,6 @@ public class BlackJackView extends JFrame{
         betBox.setBorder(yellowBorder);
         betPanel.add(betBox);
 
-        placeBetButtonPanel = new JPanel();
-        placeBetButtonPanel.setOpaque(false);
-
-        placeBetButton = new JTextArea("CLICK TO PLACE BET");
-        placeBetButton.setFont(new Font("Arial", Font.BOLD,13));
-        placeBetButton.setForeground(Color.gray);
-        placeBetButton.setSize(new Dimension(80,130));
-        placeBetButton.setWrapStyleWord(true);
-        placeBetButton.setLineWrap(true);
-        placeBetButton.setEditable(false);
-        placeBetButton.setOpaque(false);
-        placeBetButton.setFocusable(false);
-
-        placeBetButtonPanel.add(placeBetButton);
-
         visualBetPanel = new JPanel(new GridLayout(2,1));
         visualBetPanel.setOpaque(false);
         FlowLayout visualBetLayout = new FlowLayout();
@@ -276,8 +265,7 @@ public class BlackJackView extends JFrame{
         visualBetPanel.add(visualBetTop);
         visualBetPanel.add(visualBetBot);
 
-        betBox.add(placeBetButtonPanel, "card1");
-        betBox.add(visualBetPanel, "card2");
+        betBox.add(visualBetPanel, "card1");
 
         betAmount = new JLabel("0");
         betAmount.setFont(new Font("Arial", Font.PLAIN,15));
@@ -330,10 +318,14 @@ public class BlackJackView extends JFrame{
         hitButton.setVisible(false);
         standButton = new DecisionButton("STAND");
         standButton.setVisible(false);
+        betButton = new DecisionButton("PLACE BET");
+        betButton.setPreferredSize(new Dimension(160,70));
+        betButton.setVisible(true);
 
         buttonPanel.add(splitButton);
         buttonPanel.add(hitButton);
         buttonPanel.add(standButton);
+        buttonPanel.add(betButton);
 
         panel5.add(buttonPanel);
 
@@ -363,11 +355,7 @@ public class BlackJackView extends JFrame{
         panel5.add(navigationPanel);
 
 
-
         tablePanel.add(panel5);
-        //EVENT LISTENERS
-        //HIT
-        hitButton.addActionListener(e -> decisionHit());
 
         //Navigation
         homeButton.addActionListener(e -> {
@@ -450,23 +438,6 @@ public class BlackJackView extends JFrame{
         clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
-    private void decisionHit(){
-        Card p = Data.currentDeck.draw();
-        Data.addPlayerCard(p);
-        handLayout.setHgap(-65);
-        playerCardPanel.removeAll();
-        for(int i = Data.playerHandCounter; i >= 0; i--){
-            if(!(Data.playerHand[i] == null)){
-                JLabel cardG = new JLabel(new ImageIcon(Data.playerHand[i].getImg().getScaledInstance(84,117, Image.SCALE_SMOOTH)));
-                playerCardPanel.add(cardG);
-            }
-        }
-
-        validate();
-        repaint();
-
-    }
-
 
     //RESPONSIVE VIEW FUNCTIONS
 
@@ -481,17 +452,17 @@ public class BlackJackView extends JFrame{
     }
 
     public void updateDealerDialogue(String text){
-
+        dealerDialogue.setText(text);
     }
 
     public void addPlaceBetListener(MouseListener listenForPlaceBetButton){
-        placeBetButton.addMouseListener(listenForPlaceBetButton);
+        betButton.addMouseListener(listenForPlaceBetButton);
     }
     public void showChips(int balance)
     {
         glassPane.setVisible(true);
-        betBox.remove(placeBetButtonPanel);
         betBox.add(visualBetPanel);
+        betButton.setVisible(false);
 
         if(balance >= 500){
             chipButton500.setVisible(true);
@@ -586,30 +557,10 @@ public class BlackJackView extends JFrame{
     }
 
     public void updateChipButtons(int balance){
-        if(balance >= 500){
-            chipButton500.setVisible(true);
-        }
-        else{
-            chipButton500.setVisible(false);
-        }
-        if(balance >= 50){
-            chipButton50.setVisible(true);
-        }
-        else{
-            chipButton50.setVisible(false);
-        }
-        if(balance >= 5){
-            chipButton5.setVisible(true);
-        }
-        else{
-            chipButton5.setVisible(false);
-        }
-        if(balance >= 1){
-            chipButton1.setVisible(true);
-        }
-        else{
-            chipButton1.setVisible(false);
-        }
+        chipButton500.setVisible(balance >= 500);
+        chipButton50.setVisible(balance >= 50);
+        chipButton5.setVisible(balance >= 5);
+        chipButton1.setVisible(balance >= 1);
     }
 
     public void addAcceptBetListener(ActionListener listenForAcceptButton){
@@ -626,10 +577,11 @@ public class BlackJackView extends JFrame{
 
     public void cancelBet(){
         betBox.remove(visualBetPanel);
-        betBox.add(placeBetButtonPanel);
         visualBetBot.removeAll();
+        visualBetBot.revalidate();
         visualBetTop.removeAll();
-        fundLabel.setText(String.valueOf(0));
+        visualBetTop.revalidate();
+        betAmount.setText(String.valueOf(0));
     }
 
     public void updateBalance(int newBalance){
@@ -637,13 +589,109 @@ public class BlackJackView extends JFrame{
         fundLabel.repaint();
     }
 
-    public void addDealerCard(){
+    public void addPlayerCard(Card [] hand, int numOfCards){
+        if(numOfCards >= 3){
+            handLayout.setHgap(-65);
+        }
+        if(numOfCards >= 7){
+            System.out.println("the index is 7");
+            handLayout.setHgap(-73);
+        }
+        playerCardPanel.removeAll();
+
+        for(int i = numOfCards-1; i >= 0; i--){
+            JLabel cardG = new JLabel(new ImageIcon(hand[i].getImg().getScaledInstance(84,117, Image.SCALE_SMOOTH)));
+            playerCardPanel.add(cardG);
+        }
+        revalidate();
+        repaint();
+    }
+
+    public void addDealerCard(Card [] hand, int numOfCards){
+        if(numOfCards >= 2){
+            dealerCardPanel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        }
+        if(numOfCards >= 3){
+            handLayout.setHgap(-65);
+        }
+        if(numOfCards >= 7){
+            handLayout.setHgap(-73);
+        }
+        dealerCardPanel.removeAll();
+
+        for(int i = numOfCards-1; i >= 0; i--){
+            JLabel cardG = new JLabel(new ImageIcon(hand[i].getImg().getScaledInstance(84,117, Image.SCALE_SMOOTH)));
+            dealerCardPanel.add(cardG);
+        }
+        revalidate();
+        repaint();
+    }
+    public void addDealerBlankCard() throws IOException {
+        Image blankCard = ImageIO.read(new File("Cards/b0.png"));
+        JLabel cardG = new JLabel(new ImageIcon(blankCard.getScaledInstance(84,117, Image.SCALE_SMOOTH)));
+        dealerCardPanel.add(cardG);
+        revalidate();
+        repaint();
+    }
+
+    public void updateDealerTotal(int total){
+        dealerCardsBorder.setTitle(String.valueOf(total));
+    }
+
+    public void updatePlayerTotal(int total){
+        playerCardsBorder.setTitle(String.valueOf(total));
+    }
+
+    public void showDecisionButtons(){
+        hitButton.setVisible(true);
+        standButton.setVisible(true);
+    }
+    public void showSplitButton(){
+        splitButton.setVisible(true);
+    }
+    public void hideDecisionButtons(){
+        hitButton.setVisible(false);
+        standButton.setVisible(false);
+        splitButton.setVisible(false);
+    }
+
+
+    public void addHitButtonListener(ActionListener listenForHit){
+        hitButton.addActionListener(listenForHit);
+    }
+
+    public void newRound(){
+        //remove cards
+        dealerCardPanel.removeAll();
+        dealerCardPanel.revalidate();
+        dealerCardPanel.repaint();
+        playerCardPanel.removeAll();
+        playerCardPanel.revalidate();
+        playerCardPanel.repaint();
+        dealerCardsBorder.setTitle(" ");
+        playerCardsBorder.setTitle(" ");
+        dealerCardPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        handLayout.setHgap(5);
+
+        //remove bet
+        betBox.remove(visualBetPanel);
+        visualBetBot.removeAll();
+        visualBetBot.revalidate();
+        visualBetBot.repaint();
+        visualBetTop.removeAll();
+        visualBetTop.revalidate();
+        visualBetTop.repaint();
+        betAmount.setText(String.valueOf(0));
+
+        //
+        betButton.setVisible(true);
+
+
 
     }
 
-    public void addPlayerCard(){
 
-    }
+
 
 
 

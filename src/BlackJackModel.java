@@ -1,34 +1,37 @@
 import java.io.IOException;
+import java.util.Arrays;
 
 public class BlackJackModel {
     //Deck
-    public static Deck currentDeck;
+    public Deck currentDeck;
 
     //Balance and bet amount
-    private static int balance = 2500;
-    private static int bet = 0;
+    private int balance = 2500;
+    private int bet = 0;
 
     //Player's hand
-    public static Card [] playerHand = new Card[11];
-    public static int playerHandCounter = 0;
-    public static int playerHandTotal = 0;
+    public Card [] playerHand = new Card[11];
+    public int playerHandCounter = 0;
+    public int playerHandTotal = 0;
 
     //Dealer's hand
-    public static Card [] dealerHand = new Card [11];
-    public static int dealerHandCounter = 0;
-    public static int dealerHandTotal = 0;
+    public Card [] dealerHand = new Card [11];
+    public int dealerHandCounter = 0;
+    public int dealerHandTotal = 0;
 
     //utility functions
-    private static int calcHandTotal(Card[] hand){
+
+    private int calcHandTotal(Card[] hand){
         int total = 0;
         boolean ace = false;
         //sort through the hand, add numbers and find aces
+
         for(int i = 0; i < hand.length; i++){
+            if(hand[i] == null){
+                break;
+            }
             if(hand[i].value() == 1){
                 ace = true;
-            }
-            if(hand[i].value() == 0){
-                break;
             }
             total += hand[i].value();
         }
@@ -40,9 +43,6 @@ public class BlackJackModel {
         return total;
     }
 
-
-
-
     //Game Stages
     public void gameStart() throws IOException {
         currentDeck = new Deck();
@@ -52,6 +52,12 @@ public class BlackJackModel {
         bet = 0;
         dealerHandCounter = 0;
         playerHandCounter = 0;
+
+        dealerHandTotal = 0;
+        playerHandTotal = 0;
+
+        Arrays.fill(playerHand, null);
+        Arrays.fill(dealerHand, null);
 
     }
     public int getBalance(){
@@ -79,23 +85,43 @@ public class BlackJackModel {
     }
 
     //Player Decision
-    public static Card playerDrawsCard() {
+    public void playerDrawsCard() {
         Card p = currentDeck.draw();
         playerHand[playerHandCounter] = p;
         playerHandCounter++;
         playerHandTotal = calcHandTotal(playerHand);
-        return p;
     }
 
+    public Card[] getPlayerHand(){
+        return playerHand;
+    }
     public int getPlayerHandTotal(){
         return playerHandTotal;
     }
+    public int getPlayerHandCounter(){return playerHandCounter;}
 
 
     //Dealer Decision
-    public static void addDealerCard(Card d) {
+    public void dealerDrawsCard() {
+        Card d = currentDeck.draw();
         dealerHand[dealerHandCounter] = d;
         dealerHandCounter++;
+        dealerHandTotal = calcHandTotal(dealerHand);
     }
+    public Card[] getDealerHand(){
+        return dealerHand;
+    }
+    public int getDealerHandTotal(){
+        return dealerHandTotal;
+    }
+    public int getDealerHandCounter(){
+        return dealerHandCounter;
+    }
+
+
+
+
+
+
 
 }

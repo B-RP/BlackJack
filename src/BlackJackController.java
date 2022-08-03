@@ -3,6 +3,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Callable;
 
 public class BlackJackController {
 
@@ -22,6 +26,8 @@ public class BlackJackController {
 
         this.theView.addAcceptBetListener(new BetAccepted());
         this.theView.addCancelBetListener(new BetCancelled());
+
+        this.theView.addHitButtonListener(new PlayerHit());
     }
 
     //Entering Game initially
@@ -35,9 +41,11 @@ public class BlackJackController {
                 ex.printStackTrace();
             }
             theView.updateBalance(theModel.getBalance());
+            theView.updateDealerDialogue("Welcome! Please place your bet");
         }
 
     }
+
     //Enter betting UI
     class SelectBetPressed implements MouseListener {
         @Override
@@ -196,7 +204,56 @@ public class BlackJackController {
             int newBalance = theModel.getBalance();
             theView.updateBalance(newBalance);
             //INITIAL DEAL !!!!!!!!
+
+            theView.updateDealerDialogue("Dealing...");
+
+            ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+            executorService.schedule(dealDealerCard, 0, TimeUnit.MILLISECONDS);
+            executorService.schedule(dealPlayerCard, 500, TimeUnit.MILLISECONDS);
+            executorService.schedule(dealBlankDealerCard, 1000, TimeUnit.MILLISECONDS);
+            executorService.schedule(dealPlayerCard, 1500, TimeUnit.MILLISECONDS);
+            executorService.schedule(initialDealEnd, 2000,TimeUnit.MILLISECONDS);
+
         }
+        Runnable initialDealEnd = new Runnable() {
+            @Override
+            public void run() {
+                theView.showDecisionButtons();
+                theView.updateDealerDialogue(" ");
+            }
+        };
+        Runnable dealBlankDealerCard = new Runnable() {
+            @Override
+            public void run() {
+                theModel.dealerDrawsCard();
+                try {
+                    theView.addDealerBlankCard();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+        Runnable dealDealerCard = new Runnable() {
+            @Override
+            public void run() {
+                theModel.dealerDrawsCard();
+                Card [] dealerHand = theModel.getDealerHand();
+                theView.addDealerCard(dealerHand, theModel.getDealerHandCounter());
+                int handTotal = theModel.getDealerHandTotal();
+                theView.updateDealerTotal(handTotal);
+            }
+        };
+        Runnable dealPlayerCard = new Runnable() {
+            @Override
+            public void run() {
+                theModel.playerDrawsCard();
+                Card [] playerHand = theModel.getPlayerHand();
+                theView.addPlayerCard(playerHand, theModel.getPlayerHandCounter());
+                int handTotal = theModel.getPlayerHandTotal();
+                theView.updatePlayerTotal(handTotal);
+            }
+        };
     }
     //Bet cancelled
     class BetCancelled implements ActionListener{
@@ -204,7 +261,45 @@ public class BlackJackController {
         public void actionPerformed(ActionEvent e) {
             theView.closeBettingUI();
             theView.cancelBet();
+            theModel.cancelBet();
         }
+
+    }
+
+    class PlayerHit implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            theModel.playerDrawsCard();
+            theView.addPlayerCard(theModel.getPlayerHand(), theModel.getPlayerHandCounter());
+            theView.updatePlayerTotal(theModel.getPlayerHandTotal());
+
+            if(theModel.getPlayerHandTotal() > 21){
+                theView.updateDealerDialogue("Bust, house wins");
+                theView.hideDecisionButtons();
+
+                ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+                executorService.schedule(showHiddenCard,1000,TimeUnit.MILLISECONDS);
+                executorService.schedule(newRound,2000,TimeUnit.MILLISECONDS);
+
+            }
+        }
+        Runnable showHiddenCard = new Runnable() {
+            @Override
+            public void run() {
+                theView.addDealerCard(theModel.getDealerHand(), theModel.getDealerHandCounter());
+                theView.updateDealerTotal(theModel.getDealerHandTotal());
+            }
+        };
+        Runnable newRound = new Runnable() {
+            @Override
+            public void run() {
+                theView.updateDealerDialogue("Please place your bet");
+                theModel.newRound();
+                theView.newRound();
+
+            }
+        };
 
     }
 }
