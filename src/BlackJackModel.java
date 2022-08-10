@@ -12,11 +12,13 @@ public class BlackJackModel {
     //Player's hand
     public Card [] playerHand = new Card[11];
     public int playerHandCounter = 0;
+    public int playerLastCardPlaced = 0;
     public int playerHandTotal = 0;
 
     //Dealer's hand
     public Card [] dealerHand = new Card [11];
     public int dealerHandCounter = 0;
+    public int dealerLastCardPlaced = 0;
     public int dealerHandTotal = 0;
 
     //utility functions
@@ -43,6 +45,29 @@ public class BlackJackModel {
         return total;
     }
 
+    public int getTempHandTotal(Card[] hand, int handCounter){
+        int total = 0;
+        boolean ace = false;
+        //sort through the hand, add numbers and find aces
+
+        for(int i = 0; i <= handCounter; i++){
+            if(hand[i] == null){
+                break;
+            }
+            if(hand[i].value() == 1){
+                ace = true;
+            }
+            total += hand[i].value();
+        }
+
+        if((ace == true)&&(total < 12)){
+            total += 10;
+        }
+
+        return total;
+    }
+
+
     //Game Stages
     public void gameStart() throws IOException {
         currentDeck = new Deck();
@@ -50,8 +75,11 @@ public class BlackJackModel {
     }
     public void newRound(){
         bet = 0;
+
         dealerHandCounter = 0;
+        dealerLastCardPlaced = 0;
         playerHandCounter = 0;
+        playerLastCardPlaced = 0;
 
         dealerHandTotal = 0;
         playerHandTotal = 0;
@@ -99,6 +127,10 @@ public class BlackJackModel {
         return playerHandTotal;
     }
     public int getPlayerHandCounter(){return playerHandCounter;}
+    public int getPlayerLastCardPlaced(){
+        playerLastCardPlaced++;
+        return playerLastCardPlaced -1;
+    }
 
 
     //Dealer Decision
@@ -116,6 +148,10 @@ public class BlackJackModel {
     }
     public int getDealerHandCounter(){
         return dealerHandCounter;
+    }
+    public int getDealerLastCardPlaced() {
+        dealerLastCardPlaced++;
+        return dealerLastCardPlaced-1;
     }
 
 

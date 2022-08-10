@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.Callable;
 
 public class BlackJackController {
 
@@ -28,6 +27,7 @@ public class BlackJackController {
         this.theView.addCancelBetListener(new BetCancelled());
 
         this.theView.addHitButtonListener(new PlayerHit());
+        this.theView.addStandButtonListener(new PlayerStand());
     }
 
     //Entering Game initially
@@ -249,7 +249,7 @@ public class BlackJackController {
             public void run() {
                 theModel.playerDrawsCard();
                 Card [] playerHand = theModel.getPlayerHand();
-                theView.addPlayerCard(playerHand, theModel.getPlayerHandCounter());
+                theView.addPlayerCard(playerHand[theModel.getPlayerLastCardPlaced()], theModel.getPlayerHandCounter());
                 int handTotal = theModel.getPlayerHandTotal();
                 theView.updatePlayerTotal(handTotal);
             }
@@ -271,7 +271,7 @@ public class BlackJackController {
         @Override
         public void actionPerformed(ActionEvent e) {
             theModel.playerDrawsCard();
-            theView.addPlayerCard(theModel.getPlayerHand(), theModel.getPlayerHandCounter());
+            theView.addPlayerCard(theModel.getPlayerHand()[theModel.getPlayerLastCardPlaced()], theModel.getPlayerHandCounter());
             theView.updatePlayerTotal(theModel.getPlayerHandTotal());
 
             if(theModel.getPlayerHandTotal() > 21){
@@ -280,14 +280,15 @@ public class BlackJackController {
 
                 ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
                 executorService.schedule(showHiddenCard,1000,TimeUnit.MILLISECONDS);
-                executorService.schedule(newRound,2000,TimeUnit.MILLISECONDS);
+                executorService.schedule(newRound,3000,TimeUnit.MILLISECONDS);
 
             }
         }
         Runnable showHiddenCard = new Runnable() {
             @Override
             public void run() {
-                theView.addDealerCard(theModel.getDealerHand(), theModel.getDealerHandCounter());
+                theView.showHiddenDealerCard(theModel.getDealerHand(), theModel.getDealerHandCounter());
+                theModel.getDealerLastCardPlaced();
                 theView.updateDealerTotal(theModel.getDealerHandTotal());
             }
         };
@@ -298,6 +299,48 @@ public class BlackJackController {
                 theModel.newRound();
                 theView.newRound();
 
+            }
+        };
+
+    }
+
+    class PlayerStand implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            theView.hideDecisionButtons();
+            ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+            for(int i = 1; i < 9; i++){
+                if(theModel.getDealerHandTotal() <= 16){
+                    theModel.dealerDrawsCard();
+                }
+                else{
+                    break;
+                }
+            }
+            executorService.schedule(showHiddenCard,500,TimeUnit.MILLISECONDS);
+            for(int i = 1; i <= theModel.getDealerHandCounter()-2; i++){
+                executorService.schedule(dealerDraws,i*1500,TimeUnit.MILLISECONDS);
+            }
+        }
+
+        Runnable showHiddenCard = new Runnable() {
+            @Override
+            public void run() {
+                theView.showHiddenDealerCard(theModel.getDealerHand(), 2);
+                theModel.getDealerLastCardPlaced();
+                int currentTotal = theModel.getTempHandTotal(theModel.getDealerHand(), 2);
+                theView.updateDealerTotal(currentTotal);
+            }
+        };
+
+        Runnable dealerDraws = new Runnable(){
+            @Override
+            public void run() {
+                theView.addDealerCard(theModel.getDealerHand(), theModel.getDealerLastCardPlaced()+2);
+                int currentTotal = theModel.getTempHandTotal(theModel.getDealerHand(), theModel.getDealerHandCounter()+2);
+                theView.updateDealerTotal(currentTotal);
             }
         };
 

@@ -589,7 +589,7 @@ public class BlackJackView extends JFrame{
         fundLabel.repaint();
     }
 
-    public void addPlayerCard(Card [] hand, int numOfCards){
+    public void addPlayerCard(Card card, int numOfCards){
         if(numOfCards >= 3){
             handLayout.setHgap(-65);
         }
@@ -597,12 +597,9 @@ public class BlackJackView extends JFrame{
             System.out.println("the index is 7");
             handLayout.setHgap(-73);
         }
-        playerCardPanel.removeAll();
 
-        for(int i = numOfCards-1; i >= 0; i--){
-            JLabel cardG = new JLabel(new ImageIcon(hand[i].getImg().getScaledInstance(84,117, Image.SCALE_SMOOTH)));
-            playerCardPanel.add(cardG);
-        }
+        JLabel cardG = new JLabel(new ImageIcon(card.getImg().getScaledInstance(84,117, Image.SCALE_SMOOTH)));
+        playerCardPanel.add(cardG);
         revalidate();
         repaint();
     }
@@ -612,10 +609,32 @@ public class BlackJackView extends JFrame{
             dealerCardPanel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         }
         if(numOfCards >= 3){
-            handLayout.setHgap(-65);
+            dealerHandLayout.setHgap(-65);
         }
         if(numOfCards >= 7){
-            handLayout.setHgap(-73);
+            dealerHandLayout.setHgap(-73);
+        }
+
+        dealerCardPanel.removeAll();
+
+        for(int i = numOfCards-1; i >= 0; i--){
+            JLabel cardG = new JLabel(new ImageIcon(hand[i].getImg().getScaledInstance(84,117, Image.SCALE_SMOOTH)));
+            dealerCardPanel.add(cardG);
+        }
+
+        revalidate();
+        repaint();
+    }
+
+    public void showHiddenDealerCard(Card [] hand, int numOfCards){
+        if(numOfCards >= 2){
+            dealerCardPanel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        }
+        if(numOfCards >= 3){
+            dealerHandLayout.setHgap(-65);
+        }
+        if(numOfCards >= 7){
+            dealerHandLayout.setHgap(-73);
         }
         dealerCardPanel.removeAll();
 
@@ -649,12 +668,12 @@ public class BlackJackView extends JFrame{
     public void showSplitButton(){
         splitButton.setVisible(true);
     }
+
     public void hideDecisionButtons(){
         hitButton.setVisible(false);
         standButton.setVisible(false);
         splitButton.setVisible(false);
     }
-
 
     public void addHitButtonListener(ActionListener listenForHit){
         hitButton.addActionListener(listenForHit);
@@ -685,10 +704,12 @@ public class BlackJackView extends JFrame{
 
         //
         betButton.setVisible(true);
-
-
-
     }
+
+    public void addStandButtonListener(ActionListener listenForStand){
+        standButton.addActionListener(listenForStand);
+    }
+
 
 
 
