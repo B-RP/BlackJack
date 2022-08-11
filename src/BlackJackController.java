@@ -203,7 +203,6 @@ public class BlackJackController {
             theModel.takeFromBalance(theModel.getBet());
             int newBalance = theModel.getBalance();
             theView.updateBalance(newBalance);
-            //INITIAL DEAL !!!!!!!!
 
             theView.updateDealerDialogue("Dealing...");
 
@@ -238,6 +237,7 @@ public class BlackJackController {
             @Override
             public void run() {
                 theModel.dealerDrawsCard();
+                theModel.dealerCardPlaced();
                 Card [] dealerHand = theModel.getDealerHand();
                 theView.addDealerCard(dealerHand, theModel.getDealerHandCounter());
                 int handTotal = theModel.getDealerHandTotal();
@@ -280,7 +280,7 @@ public class BlackJackController {
 
                 ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
                 executorService.schedule(showHiddenCard,1000,TimeUnit.MILLISECONDS);
-                executorService.schedule(newRound,3000,TimeUnit.MILLISECONDS);
+                //executorService.schedule(newRound,3000,TimeUnit.MILLISECONDS);
 
             }
         }
@@ -288,7 +288,7 @@ public class BlackJackController {
             @Override
             public void run() {
                 theView.showHiddenDealerCard(theModel.getDealerHand(), theModel.getDealerHandCounter());
-                theModel.getDealerLastCardPlaced();
+                theModel.dealerCardPlaced();
                 theView.updateDealerTotal(theModel.getDealerHandTotal());
             }
         };
@@ -321,15 +321,27 @@ public class BlackJackController {
             }
             executorService.schedule(showHiddenCard,500,TimeUnit.MILLISECONDS);
             for(int i = 1; i <= theModel.getDealerHandCounter()-2; i++){
-                executorService.schedule(dealerDraws,i*1500,TimeUnit.MILLISECONDS);
+                executorService.schedule(dealerDraws,i*2500,TimeUnit.MILLISECONDS);
+            }
+
+            if(theModel.getDealerHandTotal() > 21){
+                //dealer bust, player wins
+            }
+            else if(theModel.getDealerHandTotal() > theModel.getPlayerHandTotal()){
+                //dealer wins
+            }
+            else{
+                //player wins
             }
         }
+
+
 
         Runnable showHiddenCard = new Runnable() {
             @Override
             public void run() {
                 theView.showHiddenDealerCard(theModel.getDealerHand(), 2);
-                theModel.getDealerLastCardPlaced();
+                theModel.dealerCardPlaced();
                 int currentTotal = theModel.getTempHandTotal(theModel.getDealerHand(), 2);
                 theView.updateDealerTotal(currentTotal);
             }
@@ -339,8 +351,10 @@ public class BlackJackController {
             @Override
             public void run() {
                 theView.addDealerCard(theModel.getDealerHand(), theModel.getDealerLastCardPlaced()+2);
-                int currentTotal = theModel.getTempHandTotal(theModel.getDealerHand(), theModel.getDealerHandCounter()+2);
+                theModel.dealerCardPlaced();
+                int currentTotal = theModel.getTempHandTotal(theModel.getDealerHand(), theModel.dealerLastCardPlaced);
                 theView.updateDealerTotal(currentTotal);
+                System.out.println(theModel.dealerLastCardPlaced);
             }
         };
 

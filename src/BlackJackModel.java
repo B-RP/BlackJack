@@ -50,7 +50,7 @@ public class BlackJackModel {
         boolean ace = false;
         //sort through the hand, add numbers and find aces
 
-        for(int i = 0; i <= handCounter; i++){
+        for(int i = 0; i < handCounter; i++){
             if(hand[i] == null){
                 break;
             }
@@ -132,7 +132,6 @@ public class BlackJackModel {
         return playerLastCardPlaced -1;
     }
 
-
     //Dealer Decision
     public void dealerDrawsCard() {
         Card d = currentDeck.draw();
@@ -150,14 +149,10 @@ public class BlackJackModel {
         return dealerHandCounter;
     }
     public int getDealerLastCardPlaced() {
-        dealerLastCardPlaced++;
         return dealerLastCardPlaced-1;
     }
-
-
-
-
-
-
+    public void dealerCardPlaced(){
+        dealerLastCardPlaced++;
+    }
 
 }
