@@ -688,6 +688,7 @@ public class BlackJackView extends JFrame{
         dealerCardsBorder.setTitle(" ");
         playerCardsBorder.setTitle(" ");
         dealerCardPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        dealerHandLayout.setHgap(5);
         handLayout.setHgap(5);
 
         //remove bet

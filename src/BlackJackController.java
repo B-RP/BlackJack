@@ -9,8 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 public class BlackJackController {
 
-    private BlackJackView theView;
-    private BlackJackModel theModel;
+    private final BlackJackView theView;
+    private final BlackJackModel theModel;
 
     BlackJackController(BlackJackView theView, BlackJackModel theModel){
         this.theView = theView;
@@ -41,10 +41,12 @@ public class BlackJackController {
                 ex.printStackTrace();
             }
             theView.updateBalance(theModel.getBalance());
-            theView.updateDealerDialogue("Welcome! Please place your bet");
+            theView.updateDealerDialogue("Welcome!");
         }
 
     }
+
+    //GAME EVENTS
 
     //Enter betting UI
     class SelectBetPressed implements MouseListener {
@@ -81,7 +83,7 @@ public class BlackJackController {
             //place the chips visually on the view
             theView.addChips(totalBet);
 
-            //update the chips shown to user to prevent going over thhe balance
+            //update the chips shown to user to prevent going over the balance
             int remainingBalance = theModel.getBalance() - theModel.getBet();
             theView.updateChipButtons(remainingBalance);
         }
@@ -112,7 +114,7 @@ public class BlackJackController {
             //place the chips visually on the view
             theView.addChips(totalBet);
 
-            //update the chips shown to user to prevent going over thhe balance
+            //update the chips shown to user to prevent going over the balance
             int remainingBalance = theModel.getBalance() - theModel.getBet();
             theView.updateChipButtons(remainingBalance);
         }
@@ -143,7 +145,7 @@ public class BlackJackController {
             //place the chips visually on the view
             theView.addChips(totalBet);
 
-            //update the chips shown to user to prevent going over thhe balance
+            //update the chips shown to user to prevent going over the balance
             int remainingBalance = theModel.getBalance() - theModel.getBet();
             theView.updateChipButtons(remainingBalance);
         }
@@ -174,7 +176,7 @@ public class BlackJackController {
             //place the chips visually on the view
             theView.addChips(totalBet);
 
-            //update the chips shown to user to prevent going over thhe balance
+            //update the chips shown to user to prevent going over the balance
             int remainingBalance = theModel.getBalance() - theModel.getBet();
             theView.updateChipButtons(remainingBalance);
         }
@@ -200,9 +202,6 @@ public class BlackJackController {
         @Override
         public void actionPerformed(ActionEvent e) {
             theView.closeBettingUI();
-            theModel.takeFromBalance(theModel.getBet());
-            int newBalance = theModel.getBalance();
-            theView.updateBalance(newBalance);
 
             theView.updateDealerDialogue("Dealing...");
 
@@ -266,6 +265,7 @@ public class BlackJackController {
 
     }
 
+    //Player hits
     class PlayerHit implements ActionListener{
 
         @Override
@@ -280,7 +280,7 @@ public class BlackJackController {
 
                 ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
                 executorService.schedule(showHiddenCard,1000,TimeUnit.MILLISECONDS);
-                //executorService.schedule(newRound,3000,TimeUnit.MILLISECONDS);
+                executorService.schedule(newRound,3000,TimeUnit.MILLISECONDS);
 
             }
         }
@@ -295,7 +295,6 @@ public class BlackJackController {
         Runnable newRound = new Runnable() {
             @Override
             public void run() {
-                theView.updateDealerDialogue("Please place your bet");
                 theModel.newRound();
                 theView.newRound();
 
@@ -303,7 +302,7 @@ public class BlackJackController {
         };
 
     }
-
+    //Player Stands
     class PlayerStand implements ActionListener{
 
         @Override
@@ -321,20 +320,13 @@ public class BlackJackController {
             }
             executorService.schedule(showHiddenCard,500,TimeUnit.MILLISECONDS);
             for(int i = 1; i <= theModel.getDealerHandCounter()-2; i++){
-                executorService.schedule(dealerDraws,i*2500,TimeUnit.MILLISECONDS);
+                executorService.schedule(dealerDraws,i* 2000L,TimeUnit.MILLISECONDS);
             }
 
-            if(theModel.getDealerHandTotal() > 21){
-                //dealer bust, player wins
-            }
-            else if(theModel.getDealerHandTotal() > theModel.getPlayerHandTotal()){
-                //dealer wins
-            }
-            else{
-                //player wins
-            }
+            executorService.schedule(settleBet, (theModel.dealerHandCounter-1)* 2000L, TimeUnit.MILLISECONDS);
+            executorService.schedule(newRound, theModel.dealerHandCounter*2000L, TimeUnit.MILLISECONDS);
+
         }
-
 
 
         Runnable showHiddenCard = new Runnable() {
@@ -358,7 +350,44 @@ public class BlackJackController {
             }
         };
 
+        Runnable settleBet = new Runnable() {
+            @Override
+            public void run() {
+                if(theModel.getDealerHandTotal() > 21){
+                    theView.updateDealerDialogue("Dealer bust, you win");
+                    theModel.addToBalance(theModel.getBet());
+                    theView.updateBalance(theModel.getBalance());
+                }
+                else if(theModel.getDealerHandTotal() > theModel.getPlayerHandTotal()){
+                    theView.updateDealerDialogue("Dealer wins");
+                    theModel.takeFromBalance(theModel.getBet());
+                    int newBalance = theModel.getBalance();
+                    theView.updateBalance(newBalance);
+                }
+                else if(theModel.getDealerHandTotal() == theModel.getPlayerHandTotal()){
+                    theView.updateDealerDialogue("Push");
+                }
+                else{
+                    theView.updateDealerDialogue("You win");
+                    theModel.addToBalance(theModel.getBet());
+                    theView.updateBalance(theModel.getBalance());
+                }
+
+            }
+        };
+
+        Runnable newRound = new Runnable() {
+            @Override
+            public void run() {
+                theModel.newRound();
+                theView.newRound();
+            }
+        };
+
     }
+
+    //NAVIGATION EVENTS
+
 }
 
 

@@ -10,7 +10,7 @@ public class BlackJackModel {
     private int bet = 0;
 
     //Player's hand
-    public Card [] playerHand = new Card[11];
+    public Card [] playerHand = new Card[12];
     public int playerHandCounter = 0;
     public int playerLastCardPlaced = 0;
     public int playerHandTotal = 0;
