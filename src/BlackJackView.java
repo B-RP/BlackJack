@@ -13,7 +13,7 @@ public class BlackJackView extends JFrame{
     private final JPanel container;
 
     private final JPanel welcomePanel;
-    private JPanel tablePanel;
+    private final JPanel tablePanel;
 
     private JPanel playerCardPanel;
     private FlowLayout handLayout;
@@ -29,7 +29,6 @@ public class BlackJackView extends JFrame{
     private JPanel visualBetTop;
     private JPanel visualBetBot;
 
-    private JPanel placeBetButtonPanel;
     private JPanel visualBetPanel;
 
     private DecisionButton playButton;
@@ -56,6 +55,9 @@ public class BlackJackView extends JFrame{
     private TitledBorder playerCardsBorder;
 
     private FlowLayout dealerHandLayout;
+    private JButton homeButton;
+
+
 
 
     public BlackJackView(String title) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
@@ -333,7 +335,7 @@ public class BlackJackView extends JFrame{
         navigationPanel.setOpaque(false);
 
         Icon homeButtonIcon = new ImageIcon("NavigationButtons/home.png");
-        JButton homeButton = new JButton(homeButtonIcon);
+        homeButton = new JButton(homeButtonIcon);
 
         homeButton.setFocusPainted(false);
         homeButton.setBorderPainted(false);
@@ -352,16 +354,9 @@ public class BlackJackView extends JFrame{
 
         panel5.add(navigationPanel);
 
-
         tablePanel.add(panel5);
 
-        //Navigation
-        homeButton.addActionListener(e -> {
-            container.remove(tablePanel);
-            container.add(welcomePanel);
-            validate();
-            repaint();
-        });
+
     }
 
     //GLASS PANEL
@@ -687,6 +682,7 @@ public class BlackJackView extends JFrame{
         playerCardPanel.repaint();
         dealerCardsBorder.setTitle(" ");
         playerCardsBorder.setTitle(" ");
+        dealerDialogue.setText(" ");
         dealerCardPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         dealerHandLayout.setHgap(5);
         handLayout.setHgap(5);
@@ -701,7 +697,6 @@ public class BlackJackView extends JFrame{
         visualBetTop.repaint();
         betAmount.setText(String.valueOf(0));
 
-        //
         betButton.setVisible(true);
     }
 
@@ -709,17 +704,19 @@ public class BlackJackView extends JFrame{
         standButton.addActionListener(listenForStand);
     }
 
+    //Navigation
+    public void addHomeButtonListener(ActionListener listenForHome){
+        homeButton.addActionListener(listenForHome);
+    }
 
 
 
-
-
-
-
-
-
-
-
+    public void goHome(){
+        container.remove(tablePanel);
+        container.add(welcomePanel);
+        validate();
+        repaint();
+    }
 
 }
 

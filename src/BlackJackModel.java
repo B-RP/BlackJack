@@ -28,17 +28,17 @@ public class BlackJackModel {
         boolean ace = false;
         //sort through the hand, add numbers and find aces
 
-        for(int i = 0; i < hand.length; i++){
-            if(hand[i] == null){
+        for (Card card : hand) {
+            if (card == null) {
                 break;
             }
-            if(hand[i].value() == 1){
+            if (card.value() == 1) {
                 ace = true;
             }
-            total += hand[i].value();
+            total += card.value();
         }
 
-        if((ace == true)&&(total < 12)){
+        if((ace)&&(total < 12)){
             total += 10;
         }
 
@@ -60,7 +60,7 @@ public class BlackJackModel {
             total += hand[i].value();
         }
 
-        if((ace == true)&&(total < 12)){
+        if((ace)&&(total < 12)){
             total += 10;
         }
 

@@ -28,6 +28,8 @@ public class BlackJackController {
 
         this.theView.addHitButtonListener(new PlayerHit());
         this.theView.addStandButtonListener(new PlayerStand());
+
+        this.theView.addHomeButtonListener(new HomeButtonPressed());
     }
 
     //Entering Game initially
@@ -276,6 +278,7 @@ public class BlackJackController {
 
             if(theModel.getPlayerHandTotal() > 21){
                 theView.updateDealerDialogue("Bust, house wins");
+                theModel.takeFromBalance(theModel.getBet());
                 theView.hideDecisionButtons();
 
                 ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
@@ -296,6 +299,7 @@ public class BlackJackController {
             @Override
             public void run() {
                 theModel.newRound();
+                theView.updateBalance(theModel.getBalance());
                 theView.newRound();
 
             }
@@ -346,7 +350,6 @@ public class BlackJackController {
                 theModel.dealerCardPlaced();
                 int currentTotal = theModel.getTempHandTotal(theModel.getDealerHand(), theModel.dealerLastCardPlaced);
                 theView.updateDealerTotal(currentTotal);
-                System.out.println(theModel.dealerLastCardPlaced);
             }
         };
 
@@ -387,6 +390,14 @@ public class BlackJackController {
     }
 
     //NAVIGATION EVENTS
+    class HomeButtonPressed implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+
+        }
+    }
 
 }
 
