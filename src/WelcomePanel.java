@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class WelcomePanel extends JPanel {
-    private final JLabel tableTextLabel = new JLabel();
     private final Image welcomeImg = ImageIO.read(new File("WelcomeText.png"));
 
     public WelcomePanel() throws IOException {

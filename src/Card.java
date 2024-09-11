@@ -1,8 +1,7 @@
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Card {
-    //TODO Change return style
+    
     private final String color;
     private final String suit;
     private final String rank;

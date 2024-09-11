@@ -58,8 +58,6 @@ public class BlackJackView extends JFrame{
     private JButton homeButton;
 
 
-
-
     public BlackJackView(String title) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
         super(title);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -417,6 +415,9 @@ public class BlackJackView extends JFrame{
         glassContentPanel.add(Box.createRigidArea(new Dimension(0,10)));
         glassContentPanel.add(acceptButton);
 
+        //Hide accept button until bet > 0
+        acceptButton.setVisible(false); 
+
         glassPane.add(glassContentPanel);
     }
 
@@ -451,6 +452,7 @@ public class BlackJackView extends JFrame{
     public void addPlaceBetListener(MouseListener listenForPlaceBetButton){
         betButton.addMouseListener(listenForPlaceBetButton);
     }
+    
     public void showChips(int balance)
     {
         glassPane.setVisible(true);
@@ -474,9 +476,11 @@ public class BlackJackView extends JFrame{
     public void addChip1Listener(MouseListener listenForChipButton){
         chipButton1.addMouseListener(listenForChipButton);
     }
+    
     public void addChip5Listener(MouseListener listenForChipButton){
         chipButton5.addMouseListener(listenForChipButton);
     }
+    
     public void addChip50Listener(MouseListener listenForChipButton){
         chipButton50.addMouseListener(listenForChipButton);
     }
@@ -489,7 +493,7 @@ public class BlackJackView extends JFrame{
         visualBetTop.repaint();
         visualBetBot.removeAll();
         visualBetBot.repaint();
-        System.out.println("adding chips");
+        
         //optimize chip usage
         int localBet = amount;
         int [] chipsArr = new int[8];
@@ -526,7 +530,7 @@ public class BlackJackView extends JFrame{
             if(chipsArr[i] == 0){
                 break;
             }
-            System.out.println(chipsArr[i]);
+            
             JLabel chip = new JLabel(new ImageIcon("Chips/"+ chipsArr[i]+".png"));
             visualBetTop.add(chip);
             visualBetBot.revalidate();
@@ -560,12 +564,14 @@ public class BlackJackView extends JFrame{
         acceptButton.addActionListener(listenForAcceptButton);
     }
 
+
     public void addCancelBetListener(ActionListener listenForCancelButton){
         cancelButton.addActionListener(listenForCancelButton);
     }
 
     public void closeBettingUI(){
         glassPane.setVisible(false);
+        betButton.setVisible(true);
     }
 
     public void cancelBet(){
@@ -587,7 +593,7 @@ public class BlackJackView extends JFrame{
             handLayout.setHgap(-65);
         }
         if(numOfCards >= 7){
-            System.out.println("the index is 7");
+            
             handLayout.setHgap(-73);
         }
 
