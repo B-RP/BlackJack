@@ -458,6 +458,7 @@ public class BlackJackView extends JFrame{
         glassPane.setVisible(true);
         betBox.add(visualBetPanel);
         betButton.setVisible(false);
+        acceptButton.setVisible(false);
 
         if(balance >= 500){
             chipButton500.setVisible(true);
@@ -551,6 +552,8 @@ public class BlackJackView extends JFrame{
             }
         }
         betAmount.setText(String.valueOf(amount));
+
+        if(amount > 0){ acceptButton.setVisible(true);}
     }
 
     public void updateChipButtons(int balance){
@@ -568,10 +571,10 @@ public class BlackJackView extends JFrame{
     public void addCancelBetListener(ActionListener listenForCancelButton){
         cancelButton.addActionListener(listenForCancelButton);
     }
-
+ 
     public void closeBettingUI(){
         glassPane.setVisible(false);
-        betButton.setVisible(true);
+        
     }
 
     public void cancelBet(){
@@ -580,6 +583,9 @@ public class BlackJackView extends JFrame{
         visualBetBot.revalidate();
         visualBetTop.removeAll();
         visualBetTop.revalidate();
+
+        acceptButton.setVisible(false);
+        betButton.setVisible(true);
         betAmount.setText(String.valueOf(0));
     }
 

@@ -55,6 +55,9 @@ public class Deck {
 
     //draw the next card on the deck
     public Card draw() {
+        if(position == 52 ) {
+            shuffle();
+        }
         int p = position;
         position++;
         return deck[p];
