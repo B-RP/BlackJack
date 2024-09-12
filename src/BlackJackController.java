@@ -30,6 +30,7 @@ public class BlackJackController {
         this.theView.addStandButtonListener(new PlayerStand());
 
         this.theView.addHomeButtonListener(new HomeButtonPressed());
+        this.theView.addSoundButtonListener(new SoundButtonPressed());
     }
 
     //Entering Game initially
@@ -394,8 +395,15 @@ public class BlackJackController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            //todo
+        }
+    }
 
+    class SoundButtonPressed implements ActionListener{
 
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            theView.toggleSound();
         }
     }
 

@@ -56,6 +56,11 @@ public class BlackJackView extends JFrame{
 
     private FlowLayout dealerHandLayout;
     private JButton homeButton;
+    private JButton soundButton;
+
+    private FloatControl volumeControl;
+    private float[] volumeSteps = new float[4];
+    private int volumeSetting = 0;
 
 
     public BlackJackView(String title) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
@@ -342,7 +347,7 @@ public class BlackJackView extends JFrame{
         navigationPanel.add(homeButton);
 
         Icon soundButtonIcon = new ImageIcon("NavigationButtons/sound.png");
-        JButton soundButton = new JButton(soundButtonIcon);
+        soundButton = new JButton(soundButtonIcon);
 
         soundButton.setFocusPainted(false);
         soundButton.setBorderPainted(false);
@@ -423,13 +428,27 @@ public class BlackJackView extends JFrame{
 
 
     //MUSIC
-    public static void music () throws LineUnavailableException, UnsupportedAudioFileException, IOException {
+    public void music () throws LineUnavailableException, UnsupportedAudioFileException, IOException {
 
         File url = new File("Music/thejazzpiano.wav");
         Clip clip = AudioSystem.getClip();
         AudioInputStream ais = AudioSystem.getAudioInputStream(url);
         clip.open(ais);
         clip.loop(Clip.LOOP_CONTINUOUSLY);
+
+        volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        float volumeMax = volumeControl.getMaximum();
+        float volumeMin = volumeControl.getMinimum();
+
+        float volumeStep = (Math.abs(volumeMax) + Math.abs(volumeMin))/4;
+
+        volumeSteps[0] = volumeMax;
+        volumeSteps[1] = volumeMax - volumeStep;
+        volumeSteps[2] = volumeMax - volumeStep*2;
+        volumeSteps[3] = volumeMin;
+
+        volumeSetting = 0;
+        volumeControl.setValue(volumeSetting);
     }
 
 
@@ -722,13 +741,29 @@ public class BlackJackView extends JFrame{
     }
 
 
-
     public void goHome(){
         container.remove(tablePanel);
         container.add(welcomePanel);
         validate();
         repaint();
     }
+
+    public void addSoundButtonListener(ActionListener listenForSound){
+        soundButton.addActionListener(listenForSound);
+    }
+
+    public void toggleSound(){
+        if(volumeSetting == 3){
+            volumeSetting = 0;
+        }
+        else{
+            volumeSetting++;
+        }
+        volumeControl.setValue(volumeSteps[volumeSetting]);
+
+    }
+
+
 
 }
 
