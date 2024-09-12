@@ -155,4 +155,22 @@ public class BlackJackModel {
         dealerLastCardPlaced++;
     }
 
+    public void newGame(){
+        //Balance and bet amount
+        bet = 0;
+        balance = 2500;
+
+        //Player's hand
+        playerHand = new Card[12];
+        playerHandCounter = 0;
+        playerLastCardPlaced = 0;
+        playerHandTotal = 0;
+
+        //Dealer's hand
+        dealerHand = new Card [11];
+        dealerHandCounter = 0;
+        dealerLastCardPlaced = 0;
+        dealerHandTotal = 0;
+    }
+
 }

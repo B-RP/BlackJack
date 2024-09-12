@@ -30,7 +30,7 @@ public class BlackJackView extends JFrame{
     private JPanel visualBetBot;
 
     private JPanel visualBetPanel;
-
+    private JDialog confirmHomeDialog;
     private DecisionButton playButton;
 
     private ChipButton chipButton1;
@@ -57,6 +57,9 @@ public class BlackJackView extends JFrame{
     private FlowLayout dealerHandLayout;
     private JButton homeButton;
     private JButton soundButton;
+
+    private DecisionButton yesHomeBttn;
+    private DecisionButton noHomeBttn;
 
     private FloatControl volumeControl;
     private float[] volumeSteps = new float[4];
@@ -98,6 +101,7 @@ public class BlackJackView extends JFrame{
         createWelcomeUIComponents();
         createUIComponents();
         betUIComponents();
+        confirmHomeUI();
     }
 
     private void createWelcomeUIComponents(){
@@ -431,7 +435,6 @@ public class BlackJackView extends JFrame{
         glassPane.add(glassContentPanel);
     }
 
-
     //MUSIC
     public void music () throws LineUnavailableException, UnsupportedAudioFileException, IOException {
 
@@ -456,6 +459,40 @@ public class BlackJackView extends JFrame{
         volumeControl.setValue(volumeSetting);
     }
 
+    private void confirmHomeUI(){
+        GridLayout grid = new GridLayout(2,1);
+        grid.setHgap(20);
+        grid.setVgap(10);
+
+        JPanel confirmHomePanel = new ConfirmPanel();
+        confirmHomePanel.setLayout(grid);
+
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new GridBagLayout());
+        topPanel.setOpaque(false);
+
+        JLabel msg = new JLabel("Are you sure? All progress will be lost");
+        msg.setForeground(new Color(244,179,36));
+        msg.setFont(new Font("Arial", Font.BOLD,20));
+        msg.setVerticalAlignment(1);
+        
+        topPanel.add(msg);
+        confirmHomePanel.add(topPanel);
+
+        JPanel botPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        botPanel.setOpaque(false);
+        yesHomeBttn = new DecisionButton("yes");
+        noHomeBttn = new DecisionButton("no");
+        botPanel.add(yesHomeBttn);
+        botPanel.add(noHomeBttn);
+        confirmHomePanel.add(botPanel);
+
+        confirmHomeDialog = new JDialog(this, "Are you sure?",true);
+        confirmHomeDialog.setSize(450,250);
+        confirmHomeDialog.setLocationRelativeTo(this);
+        confirmHomeDialog.setResizable(false);
+        confirmHomeDialog.setContentPane(confirmHomePanel);
+    }
 
     //RESPONSIVE VIEW FUNCTIONS
 
@@ -745,6 +782,21 @@ public class BlackJackView extends JFrame{
         homeButton.addActionListener(listenForHome);
     }
 
+    public void confirmHome(){
+        confirmHomeDialog.setVisible(true);
+    }
+
+    public void closeConfirmHome(){
+        confirmHomeDialog.setVisible(false);
+    }
+
+    public void addYesHomeBttnListener(ActionListener listenforyes){
+        yesHomeBttn.addActionListener(listenforyes);
+    }
+
+    public void addNoHomeBttnListener(ActionListener listenforno){
+        noHomeBttn.addActionListener(listenforno);
+    }
 
     public void goHome(){
         container.remove(tablePanel);

@@ -31,6 +31,9 @@ public class BlackJackController {
 
         this.theView.addHomeButtonListener(new HomeButtonPressed());
         this.theView.addSoundButtonListener(new SoundButtonPressed());
+
+        this.theView.addYesHomeBttnListener(new YesHomePressed());
+        this.theView.addNoHomeBttnListener(new NoHomePressed());
     }
 
     //Entering Game initially
@@ -395,7 +398,23 @@ public class BlackJackController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            //todo
+            theView.confirmHome();
+        }
+    }
+
+    class YesHomePressed implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            theView.closeConfirmHome();
+            theView.goHome();
+            theModel.newGame();
+        }
+    }
+
+    class NoHomePressed implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e){
+            theView.closeConfirmHome();
         }
     }
 
