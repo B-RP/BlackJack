@@ -61,6 +61,7 @@ public class BlackJackView extends JFrame{
     private FloatControl volumeControl;
     private float[] volumeSteps = new float[4];
     private int volumeSetting = 0;
+    private Icon[] volumeIcons = new Icon[4];
 
 
     public BlackJackView(String title) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
@@ -346,8 +347,12 @@ public class BlackJackView extends JFrame{
 
         navigationPanel.add(homeButton);
 
-        Icon soundButtonIcon = new ImageIcon("NavigationButtons/sound.png");
-        soundButton = new JButton(soundButtonIcon);
+        volumeIcons[0] = new ImageIcon("NavigationButtons/sound.png");
+        volumeIcons[1] = new ImageIcon("NavigationButtons/sound1.png");
+        volumeIcons[2] = new ImageIcon("NavigationButtons/sound2.png");
+        volumeIcons[3] = new ImageIcon("NavigationButtons/sound3.png");
+
+        soundButton = new JButton(volumeIcons[0]);
 
         soundButton.setFocusPainted(false);
         soundButton.setBorderPainted(false);
@@ -753,6 +758,7 @@ public class BlackJackView extends JFrame{
     }
 
     public void toggleSound(){
+
         if(volumeSetting == 3){
             volumeSetting = 0;
         }
@@ -760,10 +766,11 @@ public class BlackJackView extends JFrame{
             volumeSetting++;
         }
         volumeControl.setValue(volumeSteps[volumeSetting]);
+        soundButton.setIcon(volumeIcons[volumeSetting]);
+        soundButton.revalidate();
+        soundButton.repaint();
 
     }
-
-
 
 }
 
