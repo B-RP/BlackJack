@@ -28,9 +28,12 @@ public class BlackJackView extends JFrame{
 
     private JPanel visualBetTop;
     private JPanel visualBetBot;
-
     private JPanel visualBetPanel;
+
     private JDialog confirmHomeDialog;
+    private JDialog confirmGameOverDialog;
+    private DecisionButton gameOverHomeButton;
+
     private DecisionButton playButton;
 
     private ChipButton chipButton1;
@@ -102,6 +105,7 @@ public class BlackJackView extends JFrame{
         createUIComponents();
         betUIComponents();
         confirmHomeUI();
+        gameOverUI();
     }
 
     private void createWelcomeUIComponents(){
@@ -474,7 +478,6 @@ public class BlackJackView extends JFrame{
         JLabel msg = new JLabel("Are you sure? All progress will be lost");
         msg.setForeground(new Color(244,179,36));
         msg.setFont(new Font("Arial", Font.BOLD,20));
-        msg.setVerticalAlignment(1);
         
         topPanel.add(msg);
         confirmHomePanel.add(topPanel);
@@ -494,6 +497,47 @@ public class BlackJackView extends JFrame{
         confirmHomeDialog.setContentPane(confirmHomePanel);
     }
 
+    private void gameOverUI(){
+        GridLayout grid = new GridLayout(3,1);
+        grid.setHgap(20);
+        grid.setVgap(10);
+
+        JPanel gameOverPanel = new ConfirmPanel();
+        gameOverPanel.setLayout(grid);
+
+        JPanel topPanel = new JPanel(new GridBagLayout());
+        topPanel.setOpaque(false);
+
+        JLabel msg1 = new JLabel("GAME OVER");
+        msg1.setForeground(new Color(244,179,36));
+        msg1.setFont(new Font("Arial", Font.BOLD,20));
+        topPanel.add(msg1);
+
+        gameOverPanel.add(topPanel);
+
+        JPanel midPanel = new JPanel();
+        midPanel.setOpaque(false);
+        JLabel msg2 = new JLabel("You ran out of  funds.");
+        msg2.setForeground(new Color(244,179,36));
+        msg2.setFont(new Font("Arial", Font.PLAIN,18));
+        midPanel.add(msg2);
+
+        gameOverPanel.add(midPanel);
+
+        JPanel botPanel = new JPanel(new GridBagLayout());
+        botPanel.setOpaque(false);
+        gameOverHomeButton = new DecisionButton("Go Home");
+        botPanel.add(gameOverHomeButton);
+
+        gameOverPanel.add(botPanel);
+
+        confirmGameOverDialog = new JDialog(this, "Game Over", true);
+        confirmGameOverDialog.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        confirmGameOverDialog.setSize(450,250);
+        confirmGameOverDialog.setLocationRelativeTo(this);
+        confirmGameOverDialog.setResizable(false);
+        confirmGameOverDialog.setContentPane(gameOverPanel);
+    }
     //RESPONSIVE VIEW FUNCTIONS
 
     public void addEnterGameListener(ActionListener listenForPlayButton){
@@ -824,5 +868,18 @@ public class BlackJackView extends JFrame{
 
     }
 
+    public void gameOver(){
+        System.out.println("GAME OVER");
+        confirmGameOverDialog.setVisible(true);
+    }
+
+    public void closeGameOver(){
+        confirmGameOverDialog.setVisible(false);
+    }
+
+    public void addGameOverHomeListenet(ActionListener listenForHome){
+        gameOverHomeButton.addActionListener(listenForHome);
+    }
 }
+
 

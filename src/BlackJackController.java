@@ -34,6 +34,7 @@ public class BlackJackController {
 
         this.theView.addYesHomeBttnListener(new YesHomePressed());
         this.theView.addNoHomeBttnListener(new NoHomePressed());
+        this.theView.addGameOverHomeListenet(new GameOverHomeBttnPressed());
     }
 
     //Entering Game initially
@@ -305,6 +306,10 @@ public class BlackJackController {
                 theModel.newRound();
                 theView.updateBalance(theModel.getBalance());
                 theView.newRound();
+                if(theModel.getBalance() == 0){
+                    theView.gameOver();
+                    theModel.newGame();
+                }
 
             }
         };
@@ -319,7 +324,7 @@ public class BlackJackController {
             ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
             for(int i = 1; i < 9; i++){
-                if(theModel.getDealerHandTotal() <= 16){
+                if(theModel.getDealerHandTotal() < 16){
                     theModel.dealerDrawsCard();
                 }
                 else{
@@ -370,6 +375,7 @@ public class BlackJackController {
                     theModel.takeFromBalance(theModel.getBet());
                     int newBalance = theModel.getBalance();
                     theView.updateBalance(newBalance);
+
                 }
                 else if(theModel.getDealerHandTotal() == theModel.getPlayerHandTotal()){
                     theView.updateDealerDialogue("Push");
@@ -388,6 +394,11 @@ public class BlackJackController {
             public void run() {
                 theModel.newRound();
                 theView.newRound();
+
+                if(theModel.getBalance() == 0){
+                    theView.gameOver();
+                    theModel.newGame();
+                }
             }
         };
 
@@ -406,6 +417,7 @@ public class BlackJackController {
         @Override
         public void actionPerformed(ActionEvent e) {
             theView.closeConfirmHome();
+            theView.newRound();
             theView.goHome();
             theModel.newGame();
         }
@@ -426,6 +438,15 @@ public class BlackJackController {
         }
     }
 
+    class GameOverHomeBttnPressed implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e){
+            theView.closeGameOver();
+            theModel.newGame();
+            theView.newRound();
+            theView.goHome();
+        }
+    }
 }
 
 
