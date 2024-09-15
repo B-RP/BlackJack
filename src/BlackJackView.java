@@ -789,8 +789,7 @@ public class BlackJackView extends JFrame{
         hitButton.addActionListener(listenForHit);
     }
 
-    public void newRound(){
-        //remove cards
+    public void cleanTable(){
         dealerCardPanel.removeAll();
         dealerCardPanel.revalidate();
         dealerCardPanel.repaint();
@@ -813,7 +812,10 @@ public class BlackJackView extends JFrame{
         visualBetTop.revalidate();
         visualBetTop.repaint();
         betAmount.setText(String.valueOf(0));
+    }
 
+    public void newRound(){
+        cleanTable();
         betButton.setVisible(true);
     }
 
@@ -843,6 +845,8 @@ public class BlackJackView extends JFrame{
     }
 
     public void goHome(){
+        glassPane.setVisible(false);
+        cleanTable();
         container.remove(tablePanel);
         container.add(welcomePanel);
         validate();

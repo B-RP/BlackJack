@@ -417,7 +417,6 @@ public class BlackJackController {
         @Override
         public void actionPerformed(ActionEvent e) {
             theView.closeConfirmHome();
-            theView.newRound();
             theView.goHome();
             theModel.newGame();
         }
@@ -443,7 +442,6 @@ public class BlackJackController {
         public void actionPerformed(ActionEvent e){
             theView.closeGameOver();
             theModel.newGame();
-            theView.newRound();
             theView.goHome();
         }
     }
